@@ -1,0 +1,116 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "Write-Output '{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"💡 Project tip: run /kickoff to see available skills and get a project-tailored, token-efficient toolset recommendation (memory loop, on-demand harnesses). Skip if just continuing a quick task.\"}}'",
+            "shell": "powershell",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "powershell -ExecutionPolicy Bypass -File \"$HOME\\.claude\\plugins\\cache\\ponytail\\ponytail\\<version>\\hooks\\ponytail-statusline.ps1\""
+  },
+  "enabledPlugins": {
+    "superpowers@superpowers-marketplace": true,
+    "ruflo-core@ruflo": false,
+    "ruflo-swarm@ruflo": false,
+    "obsidian@obsidian-skills": true,
+    "ui-ux-pro-max@ui-ux-pro-max-skill": true,
+    "ponytail@ponytail": true,
+    "impeccable@impeccable": true,
+    "document-skills@anthropic-agent-skills": true,
+    "marketing-skills@marketingskills": false,
+    "social-media-skills@social-media-skills": false,
+    "claude-seo@agricidaniel-claude-seo": false,
+    "watch@claude-watch": true
+  },
+  "extraKnownMarketplaces": {
+    "superpowers-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers-marketplace"
+      }
+    },
+    "ruflo": {
+      "source": {
+        "source": "github",
+        "repo": "ruvnet/ruflo"
+      }
+    },
+    "obsidian-skills": {
+      "source": {
+        "source": "github",
+        "repo": "kepano/obsidian-skills"
+      }
+    },
+    "ui-ux-pro-max-skill": {
+      "source": {
+        "source": "github",
+        "repo": "nextlevelbuilder/ui-ux-pro-max-skill"
+      }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    },
+    "impeccable": {
+      "source": {
+        "source": "github",
+        "repo": "pbakaus/impeccable"
+      }
+    },
+    "anthropic-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/skills"
+      }
+    },
+    "marketingskills": {
+      "source": {
+        "source": "github",
+        "repo": "coreyhaines31/marketingskills"
+      }
+    },
+    "social-media-skills": {
+      "source": {
+        "source": "github",
+        "repo": "charlie947/social-media-skills"
+      }
+    },
+    "agricidaniel-claude-seo": {
+      "source": {
+        "source": "github",
+        "repo": "AgriciDaniel/claude-seo"
+      }
+    },
+    "claude-for-financial-services": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/financial-services"
+      }
+    },
+    "claude-for-legal": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-for-legal"
+      }
+    },
+    "claude-watch": {
+      "source": {
+        "source": "github",
+        "repo": "taoufik123-collab/claude-watch"
+      }
+    }
+  },
+  "autoUpdatesChannel": "latest",
+  "skipWorkflowUsageWarning": true
+}
