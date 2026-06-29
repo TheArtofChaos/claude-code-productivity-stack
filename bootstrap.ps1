@@ -54,7 +54,7 @@ Ok "gh ready (run 'gh auth login' in post-steps)"
 
 # ───────────── 2. Python + CLI tooling ─────────────
 Info "Installing Python tooling (notebooklm, yt-dlp, transcript api)..."
-python -m pip install --quiet --upgrade "notebooklm-py[browser]" yt-dlp curl_cffi youtube-transcript-api | Out-Null
+python -m pip install --quiet --upgrade "notebooklm-py[browser]" yt-dlp curl_cffi youtube-transcript-api fastmcp | Out-Null
 python -m playwright install chromium | Out-Null
 Ok "Python tooling installed"
 
@@ -165,4 +165,7 @@ Write-Host @"
   4. (optional) winget install ffmpeg   — only for /watch video frame-grab
   5. Restart Claude Code so plugins/skills/hooks/statusline load
   6. Recreate NotebookLM notebooks on first /wrapup (AI Brain auto-creates)
+  7. (Cowork / desktop automation) run connectors\setup-desktop-connectors.ps1 then RESTART the Claude
+     Desktop app — adds Obsidian + NotebookLM MCP connectors so Cowork/desktop chat can read/write the
+     vault and query NotebookLM (browser web chat stays manual — it can't reach local resources)
 "@ -ForegroundColor Gray
