@@ -18,7 +18,7 @@ Paths:
 - gh: `C:\Program Files\GitHub CLI\gh.exe` (or `gh` if on PATH); git is on PATH.
 
 ## 🔒 Never back up (hard rule)
-- `~/.claude/projects/*/memory/` (may contain credentials, e.g. passwords or tokens)
+- `~/.claude/projects/*/memory/` (contains credentials, e.g. passwords or tokens)
 - `~/.notebooklm/` / any `storage_state.json` (Google auth cookies)
 - API tokens / secrets of any kind
 If a file under those paths would be copied, STOP and skip it.

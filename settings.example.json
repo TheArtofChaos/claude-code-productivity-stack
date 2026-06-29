@@ -15,7 +15,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "powershell -ExecutionPolicy Bypass -File \"$HOME\\.claude\\plugins\\cache\\ponytail\\ponytail\\<version>\\hooks\\ponytail-statusline.ps1\""
+    "command": "powershell -ExecutionPolicy Bypass -File \"$HOME\\.claude\\plugins\\cache\\ponytail\\ponytail\\4.8.3\\hooks\\ponytail-statusline.ps1\""
   },
   "enabledPlugins": {
     "superpowers@superpowers-marketplace": true,
@@ -29,7 +29,8 @@
     "marketing-skills@marketingskills": false,
     "social-media-skills@social-media-skills": false,
     "claude-seo@agricidaniel-claude-seo": false,
-    "watch@claude-watch": true
+    "watch@claude-watch": true,
+    "caveman@caveman": false
   },
   "extraKnownMarketplaces": {
     "superpowers-marketplace": {
@@ -109,8 +110,15 @@
         "source": "github",
         "repo": "taoufik123-collab/claude-watch"
       }
+    },
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
     }
   },
   "autoUpdatesChannel": "latest",
-  "skipWorkflowUsageWarning": true
+  "skipWorkflowUsageWarning": true,
+  "theme": "dark"
 }

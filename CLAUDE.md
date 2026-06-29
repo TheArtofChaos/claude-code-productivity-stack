@@ -52,11 +52,12 @@ Enable for the task, disable after — `claude plugin enable <name>` / `claude p
 
 ## Backups / GitHub (don't lose anything)
 - **Obsidian vault** `$HOME\Vault` — git repo (Drive-synced too); pushed to a **private** GitHub repo. `.gitignore` excludes Drive temp + Obsidian workspace state.
-- **Claude setup** — `~/.claude/CLAUDE.md`, `skills/wrapup`, `skills/project-kickoff`, `settings.json` backed up to a private repo.
+- **Claude setup** — `~/.claude/CLAUDE.md`, `skills/wrapup`, `skills/project-kickoff`, `settings.json` backed up to a private repo (`claude-code-setup`).
+- **Public sanitized version** — `github.com/<your-git-username>/claude-code-productivity-stack` (PUBLIC, for colleagues; no personal data). Built from a sanitized copy via `%TEMP%\watch\sanitize_share.py`; never mutate the private repo. Re-sanitize + re-verify (grep + adversarial audit) before any public push.
 - **DO NOT push** the native `memory/` dir or `~/.notebooklm/storage_state.json` — they hold credentials/auth cookies.
 
 ## Deferred / not installed
-- **Graphify** (code→knowledge-graph) — **INSTALLED** (CLI `graphify` v0.8.47 at `~/.local/bin`; `graphifyy` is the author's real package per `github.com/safishamsi/graphify`). **Code-only, per-project, NO global hook** (`graphify install` was deliberately NOT run). Usage (offline, no API key): **`graphify update .`** builds/refreshes the **code** graph (use this — bare `graphify .` also ingests docs and errors without an LLM key). Then `graphify query "..."` / `path "A" "B"` / `explain "X"` against `graphify-out/graph.json`. Auto-rebuild via `graphify watch <path>`. Verified on a real 28-file module: 561 nodes/943 edges, queries return file:line. `/kickoff` + `/devteam` auto-engage it on code projects. **Never on `$HOME\Vault`** (Obsidian's own graph covers notes; doc extraction would bill the LLM API). Note: v0.8.47 has **no `graphify-obsidian` vault export** (seen in some videos) — for code, querying `graph.json` is better/cheaper than flooding the vault with stub notes; graph→notes would need a CLI upgrade or a small stub-generator (on request).
+- **Graphify** (code→knowledge-graph) — **INSTALLED** (CLI `graphify` v0.8.47 at `~/.local/bin`; `graphifyy` is the author's real package per `github.com/safishamsi/graphify`). **Code-only, per-project, NO global hook** (`graphify install` was deliberately NOT run). Usage (offline, no API key): **`graphify update .`** builds/refreshes the **code** graph (use this — bare `graphify .` also ingests docs and errors without an LLM key). Then `graphify query "..."` / `path "A" "B"` / `explain "X"` against `graphify-out/graph.json`. Auto-rebuild via `graphify watch <path>`. Verified on a real 28-file module: 561 nodes/943 edges, queries return file:line. Caveats: **re-sync after code changes** (`graphify update .`) or the index confidently lies; graph/query retrieval can **skip nested `CLAUDE.md`** module context — don't rely on it where per-module context files matter. `/kickoff` + `/devteam` auto-engage it on code projects. **Never on `$HOME\Vault`** (Obsidian's own graph covers notes; doc extraction would bill the LLM API). Note: v0.8.47 has **no `graphify-obsidian` vault export** (seen in some videos) — for code, querying `graph.json` is better/cheaper than flooding the vault with stub notes; graph→notes would need a CLI upgrade or a small stub-generator (on request).
 - **Higgsfield MCP** — skipped (paid media service; conflicts with the free-tools preference).
 
 ## Memory — three layers, tiered recall (cheapest first)
@@ -79,6 +80,18 @@ Offload bulky reference material instead of pasting it into context, then query 
   - **Vault search MCP** (active, user scope): `claude mcp add obsidian -s user -- npx -y obsidian-mcp "$HOME\Vault"` (StevenStavrakis/obsidian-mcp — search/read/create/edit notes from disk; vault is git+Drive backed). Gives search-as-a-tool over grep.
   - **Vault → NotebookLM:** notebook **"Vault"** `<auto-created>` holds the Wiki notes for audio overviews + Q&A. No live sync — re-run `notebooklm source add` weekly for changed notes.
   - **Optional sidebar:** Claudian (free, official Obsidian community plugin) runs Claude Code in an Obsidian pane — install via Obsidian → Community plugins → Browse → "Claudian".
+
+## On-demand token-savers (enable per task — both verified, both lossy)
+- **Caveman** (`JuliusBrussee/caveman`, installed **disabled**) — prose-terseness, the *output* analog to Ponytail (~65% fewer output tokens, replayed every agentic turn). `claude plugin enable caveman` for long loops; `disable` after. Trades readability for tokens.
+- **RTK** (`rtk-ai/rtk`; CLI `rtk` at `~/.local/bin`, installed from the official release binary) — compresses verbose command output (tests/logs/git/grep) ~60–90% before it enters context. Use on log-heavy work by prefixing: `rtk npm test`, `rtk git log`. **Don't use while debugging** (lossy). Native Windows = manual prefix only (the transparent PreToolUse hook needs WSL). **Never `cargo install rtk`** — that crate is poisoned; use the release binary / `--git`.
+
+## Cache discipline (the 10× cost lever)
+Cached tokens cost ~10% of fresh input, so **cache-hit rate** is the biggest cost lever — protect the cache:
+- **Don't switch models mid-session** (`/model`, or the `opusplan` plan/exec toggle) — each switch re-caches the ENTIRE conversation (prefix mismatch). `opusplan` still saves limits long-run but isn't free per toggle.
+- **`/compact` or `/clear` only at task boundaries** — or use **`/handoff`** to summarize → `/clear` → resume in a fresh, cheap session (faster/controllable vs `/compact`).
+- **Don't idle past ~1h** on a subscription (cache TTL); hand off to a fresh session rather than resuming a stale huge context. (API / sub-agents TTL = 5 min.)
+- **Editing `CLAUDE.md` mid-session is safe** — it only applies on restart, so it doesn't break the live cache; queue edits freely.
+- Run **`/context`** periodically to see what's loaded (this `CLAUDE.md` + MCP tool schemas are the usual heavies) and keep it lean. Caching lowers the *cost* of the always-on layer but it still occupies *window space* — both matter.
 
 ## Cost rules of thumb
 - Keep the always-on layer as-is; don't enable a harness "just in case".
