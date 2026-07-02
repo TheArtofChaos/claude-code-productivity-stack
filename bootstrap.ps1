@@ -139,8 +139,11 @@ Ok "settings.json written (marketplaces re-added by the steps above)"
 Info "Setting up Obsidian vault + search MCP..."
 if ($VaultRepo -notlike "<*>" -and -not (Test-Path "$VaultDir\.git")) { git clone $VaultRepo $VaultDir 2>$null }
 if (-not (Test-Path $VaultDir)) { New-Item -ItemType Directory -Force -Path $VaultDir | Out-Null }
-& $claude mcp add obsidian -s user -- npx -y obsidian-mcp "$VaultDir" 2>$null | Out-Null
-Ok "Obsidian search MCP registered for $VaultDir"
+& $claude mcp add obsidian -s user -- npx -y obsidian-mcp "$VaultDir"
+$nbServer = "$RepoRoot\connectors\notebooklm-mcp\server.py"
+$pyExe = (Get-Command python -ErrorAction SilentlyContinue).Source; if (-not $pyExe) { $pyExe = "python" }
+if (Test-Path $nbServer) { & $claude mcp add notebooklm -s user -- $pyExe $nbServer }
+Ok "Registered Claude Code MCP servers: obsidian + notebooklm (confirm in the Verify block below)"
 
 # ───────────── 10. NotebookLM keepalive task (hidden) ─────────────
 Info "Registering NotebookLM keepalive (hidden, every 15 min)..."
@@ -157,6 +160,12 @@ if ($nbExe) {
 } else { Warn "notebooklm not on PATH yet — re-run after restarting the shell to register keepalive" }
 
 # ───────────── Done ─────────────
+# ───────────── Verify (the REAL proof — checkmarks above only mean "attempted") ─────────────
+Write-Host "`n=== Verify (trust THIS, not the checkmarks above — installs don't fail loudly) ===" -ForegroundColor White
+& $claude plugin list 2>&1 | Select-String -Pattern "@|enabled|disabled"
+Write-Host "--- MCP servers (expect obsidian + notebooklm) ---" -ForegroundColor Gray
+& $claude mcp list 2>&1
+
 Write-Host "`n=== Bootstrap complete. MANUAL post-steps: ===" -ForegroundColor White
 Write-Host @"
   1. notebooklm login            (browser sign-in for NotebookLM; required once)
